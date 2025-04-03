@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  todo-app:
+    build: .
+    container_name: todo-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./static:/app/static
+    restart: unless-stopped
