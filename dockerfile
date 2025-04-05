@@ -4,6 +4,7 @@ FROM python:3.9-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PORT 8000
 
 # Set working directory
 WORKDIR /app
@@ -19,7 +20,7 @@ COPY . .
 RUN mkdir -p /app/data && chmod 777 /app/data
 
 # Expose port
-EXPOSE 8000
+EXPOSE $PORT
 
 # Command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD exec uvicorn app.main:app --host 0.0.0.0 --port $PORT
