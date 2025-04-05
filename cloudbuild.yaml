@@ -28,3 +28,7 @@ images:
 
 # Timeout for the entire build process
 timeout: '1200s'
+
+# Specify logging options to fix the service account error
+options:
+  logging: CLOUD_LOGGING_ONLY
