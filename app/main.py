@@ -48,9 +48,14 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     db.commit()
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
-# For Kubernetes health checks
+# For health checks (Cloud Run and other platforms)
 @app.get("/health")
 def health_check():
+    return {"status": "healthy"}
+
+# Special route for Cloud Run
+@app.get("/_ah/health")
+def cloud_run_health_check():
     return {"status": "healthy"}
 
 if __name__ == "__main__":
