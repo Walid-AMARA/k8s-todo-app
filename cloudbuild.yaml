@@ -1,0 +1,30 @@
+# cloudbuild.yaml
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/todo-app-repo/todo-app:$COMMIT_SHA', '.']
+
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/todo-app-repo/todo-app:$COMMIT_SHA']
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'todo-app'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/todo-app-repo/todo-app:$COMMIT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+      - '--port=8000'
+
+# Store images in Artifact Registry
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/todo-app-repo/todo-app:$COMMIT_SHA'
+
+# Timeout for the entire build process
+timeout: '1200s'
